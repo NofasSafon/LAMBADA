@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLAY | ЛАМБАДА VIBE & HUB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-dark: #0a0a0a;
+            --secondary-dark: #1a1a1a;
+            --accent-red: #dc2626;
+            --text-light: #f5f5f5;
+            --text-muted: #a1a1aa;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+        
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 800;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+        }
+        
+        .glass-effect {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(220, 38, 38, 0.2);
+        }
+        
+        .game-card {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(10, 10, 10, 0.9));
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            transition: all 0.4s ease;
+        }
+        
+        .game-card:hover {
+            border-color: var(--accent-red);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(220, 38, 38, 0.3);
+        }
+        
+        .cocktail-card {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(10, 10, 10, 0.9));
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            transition: all 0.4s ease;
+        }
+        
+        .cocktail-card:hover {
+            border-color: var(--accent-red);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(220, 38, 38, 0.3);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #dc2626, #ef4444, #dc2626);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-bottom {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+        
+        .language-switch {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+        
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .difficulty-easy {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+        
+        .difficulty-medium {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+        
+        .difficulty-hard {
+            background: rgba(220, 38, 38, 0.2);
+            color: #dc2626;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .nav-bottom {
+                bottom: 1rem;
+            }
+            
+            .language-switch {
+                top: 1rem;
+                right: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Switch -->
+    <div class="language-switch">
+        <button id="lang-ua" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+            UA
+        </button>
+        <button id="lang-sk" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-red-700 transition-colors ml-2">
+            SK
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-[60vh] flex items-center justify-center px-4">
+        <div class="text-center max-w-4xl mx-auto">
+            <h1 class="hero-title mb-6 text-gradient">🎲 PLAY</h1>
+            <p class="text-xl text-muted mb-8 max-w-2xl mx-auto">
+                Точка збору та перезавантаження. Ігротека ЛАМБАДИ з відео-оглядами для Reels та карта анти-стрес коктейлів.
+            </p>
+        </div>
+    </section>
+
+    <!-- Games Collection Section -->
+    <section class="py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="section-title text-center mb-16 text-gradient">Ігротека ЛАМБАДИ</h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Game Card 1 -->
+                <div class="game-card rounded-2xl p-6 hover-lift">
+                    <div class="aspect-video bg-gray-800 rounded-lg mb-4 overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/media.architecturaldigest.com/008e53d8733e882b47ae9520aa353543c5d2da4e.jpg" alt="Board Games" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Каркассон</h3>
+                    <p class="text-muted mb-4">Стратегічна гра для 2-5 гравців. Будуйте середньовічні замки та дороги.</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="difficulty-badge difficulty-easy">Легко</span>
+                        <span class="text-sm text-muted">2-5 гравців • 30-45 хв</span>
+                    </div>
+                    <button onclick="showGameDetails('carcassonne')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        Дізнатися більше
+                    </button>
+                </div>
+
+                <!-- Game Card 2 -->
+                <div class="game-card rounded-2xl p-6 hover-lift">
+                    <div class="aspect-video bg-gray-800 rounded-lg mb-4 overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/images.unsplash.com/photo-1611891487122-207579d67d98?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Board Games" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Монополія</h3>
+                    <p class="text-muted mb-4">Класична економічна стратегія. Купуйте, продавайте та торгуйте нерухомістю.</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="difficulty-badge difficulty-medium">Середньо</span>
+                        <span class="text-sm text-muted">2-8 гравців • 60-180 хв</span>
+                    </div>
+                    <button onclick="showGameDetails('monopoly')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        Дізнатися більше
+                    </button>
+                </div>
+
+                <!-- Game Card 3 -->
+                <div class="game-card rounded-2xl p-6 hover-lift">
+                    <div class="aspect-video bg-gray-800 rounded-lg mb-4 overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/images.unsplash.com/photo-1606092195730-5d7b9af1efc5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Board Games" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Шахи</h3>
+                    <p class="text-muted mb-4">Королівська гра стратегії. Вдосконалюйте свої тактичні навички.</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="difficulty-badge difficulty-hard">Складно</span>
+                        <span class="text-sm text-muted">2 гравці • 20-60 хв</span>
+                    </div>
+                    <button onclick="showGameDetails('chess')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        Дізнатися більше
+                    </button>
+                </div>
+
+                <!-- Game Card 4 -->
+                <div class="game-card rounded-2xl p-6 hover-lift">
+                    <div class="aspect-video bg-gray-800 rounded-lg mb-4 overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/images.unsplash.com/photo-1581553673739-c4906b5d0de8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Board Games" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Уно</h3>
+                    <p class="text-muted mb-4">Швидка карткова гра для веселої компанії. Перший хто позбувся всіх карт.</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="difficulty-badge difficulty-easy">Легко</span>
+                        <span class="text-sm text-muted">2-10 гравців • 15-30 хв</span>
+                    </div>
+                    <button onclick="showGameDetails('uno')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        Дізнатися більше
+                    </button>
+                </div>
+
+                <!-- Game Card 5 -->
+                <div class="game-card rounded-2xl p-6 hover-lift">
+                    <div class="aspect-video bg-gray-800 rounded-lg mb-4 overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/images.unsplash.com/photo-1606167668584-78701c57f13d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Board Games" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Скрабл</h3>
+                    <p class="text-muted mb-4">Гра для любителів слів. Складайте слова та заробляйте очки.</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="difficulty-badge difficulty-medium">Середньо</span>
+                        <span class="text-sm text-muted">2-4 гравці • 45-90 хв</span>
+                    </div>
+                    <button onclick="showGameDetails('scrabble')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        Дізнатися більше
+                    </button>
+                </div>
+
+                <!-- Game Card 6 -->
+                <div class="game-card rounded-2xl p-6 hover-lift">
+                    <div class="aspect-video bg-gray-800 rounded-lg mb-4 overflow-hidden">
+                        <img src="https://kimi-web-img.moonshot.cn/img/images.unsplash.com/photo-1611891487122-207579d67d98?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Board Games" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Манчкін</h3>
+                    <p class="text-muted mb-4">Гумористична гра про підземелля. Бийте монстрів та крадіть скарби!</p>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="difficulty-badge difficulty-medium">Середньо</span>
+                        <span class="text-sm text-muted">3-6 гравців • 60-120 хв</span>
+                    </div>
+                    <button onclick="showGameDetails('munchkin')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        Дізнатися більше
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Anti-Stress Cocktails Section -->
+    <section class="py-20 px-4 bg-secondary-dark">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="section-title text-center mb-16 text-gradient">Анти-Стрес Коктейлі</h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Cocktail Card 1 -->
+                <div class="cocktail-card rounded-2xl p-6 hover-lift">
+                    <div class="aspect-square bg-gray-800 rounded-lg mb-4 overflow-hidden">
+                        <img src="img/kok_1.jpg" alt="Cocktail" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Red Vibe</h3>
+                    <p class="text-muted mb-4">Класичний коктейль з віскі та червоного вермуту. Для справжніх поціновувачів.</p>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-wine-bottle text-red-500 mr-2"></i>
+                            <span>Віскі, Червоний вермут, Ангостура</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-clock text-red-500 mr-2"></i>
+                            <span>5 хвилин приготування</span>
+                        </div>
+                    </div>
+                    <button onclick="showCocktailRecipe('red-vibe')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        Рецепт
+                    </button>
+                </div>
+
+                <!-- Cocktail Card 2 -->
+                <div class="cocktail-card rounded-2xl p-6 hover-lift">
+                    <div class="aspect-square bg-gray-800 rounded-lg mb-4 overflow-hidden">
+                        <img src="img/kok_2.jpg" alt="Cocktail" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Lambada Sunset</h3>
+                    <p class="text-muted mb-4">Тропічний коктейль з ромом та фруктовими соками. Насолоджуйтесь моментом.</p>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-wine-bottle text-red-500 mr-2"></i>
+                            <span>Ром, Ананасовий сік, Гренадин</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-clock text-red-500 mr-2"></i>
+                            <span>3 хвилини приготування</span>
+                        </div>
+                    </div>
+                    <button onclick="showCocktailRecipe('lambada-sunset')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        Рецепт
+                    </button>
+                </div>
+
+                <!-- Cocktail Card 3 -->
+                <div class="cocktail-card rounded-2xl p-6 hover-lift">
+                    <div class="aspect-square bg-gray-800 rounded-lg mb-4 overflow-hidden">
+                        <img src="img/kok_3.jpg" alt="Cocktail" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Stress Killer</h3>
+                    <p class="text-muted mb-4">М'ятний освіжаючий коктейль. Ідеальний після напруженого дня.</p>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-wine-bottle text-red-500 mr-2"></i>
+                            <span>Джин, М'ята, Лайм, Тонік</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-clock text-red-500 mr-2"></i>
+                            <span>4 хвилини приготування</span>
+                        </div>
+                    </div>
+                    <button onclick="showCocktailRecipe('stress-killer')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        Рецепт
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Reels Section -->
+    <section class="py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="section-title text-center mb-16 text-gradient">Відео-огляди для Reels</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-secondary-dark rounded-2xl p-8 hover-lift">
+                    <div class="aspect-video bg-gray-800 rounded-lg mb-6 flex items-center justify-center">
+                        <i class="fas fa-play text-6xl text-red-500"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Як грати в Каркассон</h3>
+                    <p class="text-muted mb-4">Повний гайд для початківців. Правила, стратегії та поради від професіоналів.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-muted">Тривалість: 5:30</span>
+                        <button onclick="playVideo('carcassonne-guide')" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                            Переглянути
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-secondary-dark rounded-2xl p-8 hover-lift">
+                    <div class="aspect-video bg-gray-800 rounded-lg mb-6 flex items-center justify-center">
+                        <i class="fas fa-play text-6xl text-red-500"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Топ 5 стратегій для Монополії</h3>
+                    <p class="text-muted mb-4">Секрети перемоги від експертів. Як завжди залишатись у фаворі.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-muted">Тривалість: 7:15</span>
+                        <button onclick="playVideo('monopoly-strategies')" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                            Переглянути
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="https://instagram.com/lambada_kosice" target="_blank" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full hover:from-purple-700 hover:to-pink-700 transition-all hover-lift">
+                    <i class="fab fa-instagram mr-3"></i>
+                    Слідкуйте за новими відео
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <nav class="nav-bottom glass-effect rounded-full px-6 py-3">
+        <div class="flex items-center space-x-6">
+            <button onclick="window.location.href='index.html'" class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
+                <i class="fas fa-home"></i>
+                <span class="hidden sm:inline">Головна</span>
+            </button>
+            <button onclick="window.location.href='play.html'" class="flex items-center space-x-2 text-red-500 hover:text-red-400 transition-colors">
+                <i class="fas fa-gamepad"></i>
+                <span class="hidden sm:inline">PLAY</span>
+            </button>
+            <button onclick="window.location.href='vibe.html'" class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
+                <i class="fas fa-music"></i>
+                <span class="hidden sm:inline">VIBE</span>
+            </button>
+            <button onclick="window.location.href='hub.html'" class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
+                <i class="fas fa-users"></i>
+                <span class="hidden sm:inline">HUB</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Modals -->
+    <div id="game-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-secondary-dark rounded-2xl p-8 max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="game-modal-title" class="text-2xl font-bold text-gradient"></h3>
+                <button onclick="closeModal('game-modal')" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div id="game-modal-content"></div>
+        </div>
+    </div>
+
+    <div id="cocktail-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-secondary-dark rounded-2xl p-8 max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="cocktail-modal-title" class="text-2xl font-bold text-gradient"></h3>
+                <button onclick="closeModal('cocktail-modal')" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div id="cocktail-modal-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // Language switch functionality
+        document.getElementById('lang-ua').addEventListener('click', function() {
+            this.classList.add('bg-red-600');
+            this.classList.remove('bg-gray-700');
+            document.getElementById('lang-sk').classList.add('bg-gray-700');
+            document.getElementById('lang-sk').classList.remove('bg-red-600');
+        });
+
+        document.getElementById('lang-sk').addEventListener('click', function() {
+            this.classList.add('bg-red-600');
+            this.classList.remove('bg-gray-700');
+            document.getElementById('lang-ua').classList.add('bg-gray-700');
+            document.getElementById('lang-ua').classList.remove('bg-red-600');
+        });
+
+        // Game details modal
+        function showGameDetails(gameId) {
+            const games = {
+                'carcassonne': {
+                    title: 'Каркассон',
+                    content: `
+                        <div class="space-y-4">
+                            <img src="https://kimi-web-img.moonshot.cn/img/media.architecturaldigest.com/008e53d8733e882b47ae9520aa353543c5d2da4e.jpg" alt="Carcassonne" class="w-full h-48 object-cover rounded-lg">
+                            <p class="text-muted">Каркассон - це стратегічна настільна гра, в якій гравці створюють ландшафт середньовічного Франції, розміщуючи плитки з замками, дорогами, полями та монастирями.</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <h4 class="font-bold mb-2">Правила:</h4>
+                                    <ul class="text-sm text-muted space-y-1">
+                                        <li>• Розміщуйте плитки на столі</li>
+                                        <li>• Розставляйте своїх міплів</li>
+                                        <li>• Заробляйте очки за об'єкти</li>
+                                        <li>• Найбільше очок - перемога</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold mb-2">Стратегія:</h4>
+                                    <ul class="text-sm text-muted space-y-1">
+                                        <li>• Контролюйте великі замки</li>
+                                        <li>• Завершуйте дороги</li>
+                                        <li>• Монополізуйте поля</li>
+                                        <li>• Блокуйте суперників</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <button onclick="reserveGame('carcassonne')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                                Забронювати гру
+                            </button>
+                        </div>
+                    `
+                },
+                'monopoly': {
+                    title: 'Монополія',
+                    content: `
+                        <div class="space-y-4">
+                            <img src="https://kimi-web-img.moonshot.cn/img/images.unsplash.com/photo-1606092195730-5d7b9af1efc5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Monopoly" class="w-full h-48 object-cover rounded-lg">
+                            <p class="text-muted">Монополія - класична економічна стратегія, де гравці купують, продають та торгують нерухомістю для досягнення фінансової домінації.</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <h4 class="font-bold mb-2">Ключові правила:</h4>
+                                    <ul class="text-sm text-muted space-y-1">
+                                        <li>• Купуйте властивості</li>
+                                        <li>• Будуйте будинки та готелі</li>
+                                        <li>• Збирайте ренту</li>
+                                        <li>• Робіть угоди</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold mb-2">Виграшна стратегія:</h4>
+                                    <ul class="text-sm text-muted space-y-1">
+                                        <li>• Контролюйте монополії</li>
+                                        <li>• Інвестуйте в будинки</li>
+                                        <li>• Управляйте грошима</li>
+                                        <li>• Торгуйте мудро</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <button onclick="reserveGame('monopoly')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                                Забронювати гру
+                            </button>
+                        </div>
+                    `
+                }
+            };
+
+            const game = games[gameId];
+            if (game) {
+                document.getElementById('game-modal-title').textContent = game.title;
+                document.getElementById('game-modal-content').innerHTML = game.content;
+                document.getElementById('game-modal').classList.remove('hidden');
+                document.getElementById('game-modal').classList.add('flex');
+            }
+        }
+
+        // Cocktail recipe modal
+        function showCocktailRecipe(cocktailId) {
+            const cocktails = {
+                'red-vibe': {
+                    title: 'Red Vibe',
+                    content: `
+                        <div class="space-y-4">
+                            <img src="https://kimi-web-img.moonshot.cn/img/img.freepik.com/90eb9e90a013a605d6ac71fadee7b2a99a5ce715.jpg" alt="Red Vibe" class="w-full h-48 object-cover rounded-lg">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <h4 class="font-bold mb-2">Інгредієнти:</h4>
+                                    <ul class="text-sm text-muted space-y-1">
+                                        <li>• 60 мл віскі</li>
+                                        <li>• 30 мл червоного вермуту</li>
+                                        <li>• 2-3 краплі ангостури</li>
+                                        <li>• Лід</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold mb-2">Приготування:</h4>
+                                    <ol class="text-sm text-muted space-y-1">
+                                        <li>1. Наповніть склянку льодом</li>
+                                        <li>2. Додайте віскі та вермут</li>
+                                        <li>3. Додайте ангостуру</li>
+                                        <li>4. Перемішайте та подавайте</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div class="bg-red-600 bg-opacity-20 p-4 rounded-lg">
+                                <p class="text-sm"><strong class="text-red-400">Порада:</strong> Використовуйте якісне віскі для найкращого смаку.</p>
+                            </div>
+                        </div>
+                    `
+                },
+                'lambada-sunset': {
+                    title: 'Lambada Sunset',
+                    content: `
+                        <div class="space-y-4">
+                            <img src="https://kimi-web-img.moonshot.cn/img/daily.sevenfifty.com/3faf4c2d6ce2e3d3e60182cbe3aec7bd03e2d6f8.jpg" alt="Lambada Sunset" class="w-full h-48 object-cover rounded-lg">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <h4 class="font-bold mb-2">Інгредієнти:</h4>
+                                    <ul class="text-sm text-muted space-y-1">
+                                        <li>• 50 мл рома</li>
+                                        <li>• 100 мл ананасового соку</li>
+                                        <li>• 15 мл гренадину</li>
+                                        <li>• Лід</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold mb-2">Приготування:</h4>
+                                    <ol class="text-sm text-muted space-y-1">
+                                        <li>1. Наповніть склянку льодом</li>
+                                        <li>2. Додайте ром та сік</li>
+                                        <li>3. Повільно додайте гренадин</li>
+                                        <li>4. Прикрасьте часточкою ананасу</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div class="bg-red-600 bg-opacity-20 p-4 rounded-lg">
+                                <p class="text-sm"><strong class="text-red-400">Порада:</strong> Гренадин створює красивий градієнтний ефект.</p>
+                            </div>
+                        </div>
+                    `
+                }
+            };
+
+            const cocktail = cocktails[cocktailId];
+            if (cocktail) {
+                document.getElementById('cocktail-modal-title').textContent = cocktail.title;
+                document.getElementById('cocktail-modal-content').innerHTML = cocktail.content;
+                document.getElementById('cocktail-modal').classList.remove('hidden');
+                document.getElementById('cocktail-modal').classList.add('flex');
+            }
+        }
+
+        // Close modal function
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Reserve game function
+        function reserveGame(gameId) {
+            alert('Функція бронювання скоро буде доступна! Зараз ви можете просто прийти та обрати гру на місці.');
+        }
+
+        // Play video function
+        function playVideo(videoId) {
+            alert('Відео скоро буде доступне! Слідкуйте за нашим Instagram @lambada_kosice');
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('fixed')) {
+                e.target.classList.add('hidden');
+                e.target.classList.remove('flex');
+            }
+        });
+    </script>
+</body>
+</html>
