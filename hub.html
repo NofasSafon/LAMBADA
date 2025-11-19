@@ -28,7 +28,7 @@
             color: var(--text-light);
             overflow-x: hidden;
         }
-                   
+                    
         .hero-title {
             font-family: 'Playfair Display', serif;
             font-weight: 800;
@@ -36,7 +36,7 @@
             line-height: 0.9;
             letter-spacing: -0.02em;
         }
-               
+                
         .section-title {
             font-family: 'Playfair Display', serif;
             font-weight: 700;
@@ -58,25 +58,13 @@
             box-shadow: 0 15px 30px rgba(220, 38, 38, 0.2);
         }
         
-        .event-card {
+        .event-card, .friendship-card {
             background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(10, 10, 10, 0.9));
             border: 1px solid rgba(220, 38, 38, 0.2);
             transition: all 0.4s ease;
         }
         
-        .event-card:hover {
-            border-color: var(--accent-red);
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(220, 38, 38, 0.3);
-        }
-        
-        .friendship-card {
-            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(10, 10, 10, 0.9));
-            border: 1px solid rgba(220, 38, 38, 0.2);
-            transition: all 0.4s ease;
-        }
-        
-        .friendship-card:hover {
+        .event-card:hover, .friendship-card:hover {
             border-color: var(--accent-red);
             transform: translateY(-10px);
             box-shadow: 0 20px 40px rgba(220, 38, 38, 0.3);
@@ -131,29 +119,37 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            cursor: default;
             transition: all 0.2s ease;
             position: relative;
         }
         
-        .calendar-day:hover {
+        .calendar-day:not(.calendar-header):hover {
             background: var(--secondary-dark);
         }
         
         .calendar-day.has-event {
-            background: rgba(220, 38, 38, 0.2);
+            background: rgba(220, 38, 38, 0.1);
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+
+        .calendar-day.has-event:hover {
+            background: rgba(220, 38, 38, 0.3);
         }
         
         .calendar-day.has-event::after {
             content: '';
             position: absolute;
-            bottom: 4px;
+            bottom: 6px;
             left: 50%;
             transform: translateX(-50%);
             width: 6px;
             height: 6px;
             background: var(--accent-red);
             border-radius: 50%;
+            box-shadow: 0 0 5px var(--accent-red);
         }
         
         .calendar-header {
@@ -161,6 +157,7 @@
             color: var(--text-muted);
             font-weight: 600;
             font-size: 0.875rem;
+            cursor: default;
         }
         
         .event-language {
@@ -171,58 +168,26 @@
             font-weight: 600;
         }
         
-        .lang-ua {
-            background: rgba(0, 123, 255, 0.2);
-            color: #007bff;
-        }
-        
-        .lang-sk {
-            background: rgba(40, 167, 69, 0.2);
-            color: #28a745;
-        }
-        
-        .lang-both {
-            background: rgba(220, 38, 38, 0.2);
-            color: #dc2626;
-        }
+        .lang-ua { background: rgba(0, 123, 255, 0.2); color: #007bff; }
+        .lang-sk { background: rgba(40, 167, 69, 0.2); color: #28a745; }
+        .lang-both { background: rgba(220, 38, 38, 0.2); color: #dc2626; }
         
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            
-            .nav-bottom {
-                bottom: 1rem;
-            }
-            
-            .language-switch {
-                top: 1rem;
-                right: 1rem;
-            }
-            
-            .calendar-grid {
-                font-size: 0.875rem;
-            }
+            .hero-title { font-size: 2.5rem; }
+            .nav-bottom { bottom: 1rem; }
+            .language-switch { top: 1rem; right: 1rem; }
+            .calendar-grid { font-size: 0.875rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Language Switch -->
     <div class="language-switch">
-        <button id="lang-ua" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-            UA
-        </button>
-        <button id="lang-sk" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-red-700 transition-colors ml-2">
-            SK
-        </button>
+        <button id="lang-ua" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">UA</button>
+        <button id="lang-sk" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-red-700 transition-colors ml-2">SK</button>
     </div>
 
-    <!-- Hero Section -->
-    
     <section class="relative min-h-[60vh] flex items-center justify-center px-4 coverflow-hidden">  
-
         <div id="vanta-bg" class="vanta-canvas"></div>
-    
         <div class="hero-content text-center max-w-4xl mx-auto">
             <h1 class="hero-title mb-6 text-gradient">🌐 HUB</h1>
             <p class="text-xl text-muted mb-8 max-w-2xl mx-auto">
@@ -231,147 +196,33 @@
         </div>
     </section>
 
-    <!-- Event Calendar Section -->
     <section class="py-20 px-4">
         <div class="max-w-7xl mx-auto">
             <h2 class="section-title text-center mb-16 text-gradient">Календар Подій</h2>
             
-            <!-- Calendar Navigation -->
             <div class="flex items-center justify-between mb-8">
-                <button onclick="previousMonth()" class="p-2 bg-secondary-dark rounded-lg hover:bg-red-600 transition-colors">
+                <button onclick="changeMonth(-1)" class="p-2 bg-secondary-dark rounded-lg hover:bg-red-600 transition-colors">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <h3 class="text-2xl font-bold" id="current-month">Листопад 2025</h3>
-                <button onclick="nextMonth()" class="p-2 bg-secondary-dark rounded-lg hover:bg-red-600 transition-colors">
+                <h3 class="text-2xl font-bold capitalize" id="current-month-display"></h3>
+                <button onclick="changeMonth(1)" class="p-2 bg-secondary-dark rounded-lg hover:bg-red-600 transition-colors">
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
             
-            <!-- Calendar Grid -->
-            <div class="calendar-grid mb-12">
-                <!-- Calendar Headers -->
-                <div class="calendar-day calendar-header">Пн</div>
-                <div class="calendar-day calendar-header">Вт</div>
-                <div class="calendar-day calendar-header">Ср</div>
-                <div class="calendar-day calendar-header">Чт</div>
-                <div class="calendar-day calendar-header">Пт</div>
-                <div class="calendar-day calendar-header">Сб</div>
-                <div class="calendar-day calendar-header">Нд</div>
-                
-                <!-- Calendar Days -->
-                <div class="calendar-day">1</div>
-                <div class="calendar-day">2</div>
-                <div class="calendar-day">3</div>
-                <div class="calendar-day">4</div>
-                <div class="calendar-day">5</div>
-                <div class="calendar-day">6</div>
-                <div class="calendar-day">7</div>
-                <div class="calendar-day">8</div>
-                <div class="calendar-day">9</div>
-                <div class="calendar-day">10</div>
-                <div class="calendar-day">11</div>
-                <div class="calendar-day">12</div>
-                <div class="calendar-day">13</div>
-                <div class="calendar-day">14</div>
-                <div class="calendar-day">15</div>
-                <div class="calendar-day">16</div>
-                <div class="calendar-day">17</div>
-                <div class="calendar-day has-event" onclick="showEventDetails('monday-club')">18</div>
-                <div class="calendar-day">19</div>
-                <div class="calendar-day has-event" onclick="showEventDetails('game-night')">20</div>
-                <div class="calendar-day">21</div>
-                <div class="calendar-day">22</div>
-                <div class="calendar-day">23</div>
-                <div class="calendar-day">24</div>
-                <div class="calendar-day">25</div>
-                <div class="calendar-day">26</div>
-                <div class="calendar-day">27</div>
-                <div class="calendar-day">28</div>
-                <div class="calendar-day">29</div>
-                <div class="calendar-day">30</div>
-            </div>
+            <div class="calendar-grid mb-12" id="calendar-grid">
+                </div>
             
-            <!-- Upcoming Events -->
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Event Card 1 -->
-                <div class="event-card rounded-2xl p-6 hover-lift">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="event-language lang-ua">Українська</span>
-                        <span class="text-sm text-muted">18 листопада, 18:00</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">Мовний Клуб</h3>
-                    <p class="text-muted mb-4">Практика української мови для всіх рівнів. Ігри, розмови, нові знайомства.</p>
-                    <div class="flex items-center space-x-4 mb-4">
-                        <div class="flex items-center text-sm text-muted">
-                            <i class="fas fa-users mr-2"></i>
-                            <span>15 учасників</span>
-                        </div>
-                        <div class="flex items-center text-sm text-muted">
-                            <i class="fas fa-map-marker-alt mr-2"></i>
-                            <span>Коворкінг зона</span>
-                        </div>
-                    </div>
-                    <button onclick="joinEvent('monday-club')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                        Приєднатися
-                    </button>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="events-container">
                 </div>
-
-                <!-- Event Card 2 -->
-                <div class="event-card rounded-2xl p-6 hover-lift">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="event-language lang-sk">Slovenský</span>
-                        <span class="text-sm text-muted">20 листопада, 19:00</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">Game Night</h3>
-                    <p class="text-muted mb-4">Турнір з настільних ігор. Каркассон, Монополія, Уно та багато іншого!</p>
-                    <div class="flex items-center space-x-4 mb-4">
-                        <div class="flex items-center text-sm text-muted">
-                            <i class="fas fa-users mr-2"></i>
-                            <span>20 учасників</span>
-                        </div>
-                        <div class="flex items-center text-sm text-muted">
-                            <i class="fas fa-map-marker-alt mr-2"></i>
-                            <span>Ігрова зона</span>
-                        </div>
-                    </div>
-                    <button onclick="joinEvent('game-night')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                        Приєднатися
-                    </button>
-                </div>
-
-                <!-- Event Card 3 -->
-                <div class="event-card rounded-2xl p-6 hover-lift">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="event-language lang-both">UA/SK</span>
-                        <span class="text-sm text-muted">25 листопада, 20:00</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">VIBE Night</h3>
-                    <p class="text-muted mb-4">Вечір атмосферної музики в стилі The Weeknd. Коктейлі, вібе, нові знайомства.</p>
-                    <div class="flex items-center space-x-4 mb-4">
-                        <div class="flex items-center text-sm text-muted">
-                            <i class="fas fa-users mr-2"></i>
-                            <span>30 учасників</span>
-                        </div>
-                        <div class="flex items-center text-sm text-muted">
-                            <i class="fas fa-map-marker-alt mr-2"></i>
-                            <span>Лаунж зона</span>
-                        </div>
-                    </div>
-                    <button onclick="joinEvent('vibe-night')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                        Приєднатися
-                    </button>
-                </div>
-            </div>
         </div>
     </section>
 
-    <!-- Friendship Wall Section -->
     <section class="py-20 px-4 bg-secondary-dark">
         <div class="max-w-7xl mx-auto">
             <h2 class="section-title text-center mb-16 text-gradient">Стіна Дружби</h2>
             
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                <!-- Friendship Card 1 -->
                 <div class="friendship-card rounded-2xl p-4 hover-lift">
                     <div class="aspect-square bg-gray-800 rounded-lg mb-3 overflow-hidden">
                         <img src="img/fr_1.jpg" alt="Friend 1" class="w-full h-full object-cover">
@@ -380,8 +231,6 @@
                     <p class="text-sm text-muted text-center">POCKET ACES ♥️♣️💀♠️♦️</p>
                     <p class="text-xs text-muted text-center mt-2">#LAMBADA.Kosice #pocket_a.c.e.s</p>
                 </div>
-
-                <!-- Friendship Card 2 -->
                 <div class="friendship-card rounded-2xl p-4 hover-lift">
                     <div class="aspect-square bg-gray-800 rounded-lg mb-3 overflow-hidden">
                         <img src="img/fr_2.jpg" alt="Friend 2" class="w-full h-full object-cover">
@@ -390,8 +239,6 @@
                     <p class="text-sm text-muted text-center">Студентка ТУКЕ</p>
                     <p class="text-xs text-muted text-center mt-2">#LAMBADA.Kosice #GameNight</p>
                 </div>
-
-                <!-- Friendship Card 3 -->
                 <div class="friendship-card rounded-2xl p-4 hover-lift">
                     <div class="aspect-square bg-gray-800 rounded-lg mb-3 overflow-hidden">
                         <img src="img/fr_3.jpg" alt="Friend 3" class="w-full h-full object-cover">
@@ -400,8 +247,6 @@
                     <p class="text-sm text-muted text-center">Студент FAN</p>
                     <p class="text-xs text-muted text-center mt-2">#LAMBADA.Kosice #VIBENight</p>
                 </div>
-
-                <!-- Friendship Card 4 -->
                 <div class="friendship-card rounded-2xl p-4 hover-lift">
                     <div class="aspect-square bg-gray-800 rounded-lg mb-3 overflow-hidden">
                         <img src="img/fr_4.jpg" alt="Friend 4" class="w-full h-full object-cover">
@@ -412,7 +257,6 @@
                 </div>
             </div>
             
-            <!-- Add Your Photo Section -->
             <div class="text-center">
                 <h3 class="text-2xl font-bold mb-6">Додайте своє фото!</h3>
                 <p class="text-muted mb-8 max-w-2xl mx-auto">
@@ -433,71 +277,54 @@
         </div>
     </section>
 
-    <!-- Hashtag Section -->
     <section class="py-20 px-4">
         <div class="max-w-7xl mx-auto text-center">
             <h2 class="section-title mb-8 text-gradient">Наш Хештег</h2>
             <div class="bg-gradient-to-r from-red-600 to-purple-600 rounded-2xl p-12 mb-8">
                 <h3 class="text-4xl font-bold text-white mb-4">#LAMBADA.Kosice</h3>
                 <p class="text-white text-opacity-90 text-lg max-w-2xl mx-auto">
-                    Використовуйте цей хештег у своїх постах в Instagram, Facebook та TikTok, 
-                    щоб ми могли знайти ваші фото та поділитися ними зі спільнотою.
+                    Використовуйте цей хештег у своїх постах в Instagram, Facebook та TikTok.
                 </p>
             </div>
-            
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="text-center">
-                    <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-camera text-2xl text-white"></i>
-                    </div>
+                    <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-camera text-2xl text-white"></i></div>
                     <h4 class="font-bold mb-2">Фотографуйте</h4>
-                    <p class="text-muted">Робіть яскраві фото під час наших заходів</p>
+                    <p class="text-muted">Робіть яскраві фото</p>
                 </div>
-                
                 <div class="text-center">
-                    <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-hashtag text-2xl text-white"></i>
-                    </div>
+                    <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-hashtag text-2xl text-white"></i></div>
                     <h4 class="font-bold mb-2">Додавайте хештег</h4>
-                    <p class="text-muted">Використовуйте #LAMBADA.Kosice у підписах</p>
+                    <p class="text-muted">#LAMBADA.Kosice</p>
                 </div>
-                
                 <div class="text-center">
-                    <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-share text-2xl text-white"></i>
-                    </div>
+                    <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-share text-2xl text-white"></i></div>
                     <h4 class="font-bold mb-2">Діліться</h4>
-                    <p class="text-muted">Тегайте нас @lambada.kosice для репостів</p>
+                    <p class="text-muted">Тегайте нас @lambada.kosice</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Bottom Navigation -->
     <nav class="nav-bottom glass-effect rounded-full px-6 py-3">
         <div class="flex items-center space-x-6">
             <button onclick="window.location.href='index.html'" class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
-                <i class="fas fa-home"></i>
-                <span class="hidden sm:inline">Головна</span>
+                <i class="fas fa-home"></i><span class="hidden sm:inline">Головна</span>
             </button>
             <button onclick="window.location.href='play.html'" class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
-                <i class="fas fa-gamepad"></i>
-                <span class="hidden sm:inline">PLAY</span>
+                <i class="fas fa-gamepad"></i><span class="hidden sm:inline">PLAY</span>
             </button>
             <button onclick="window.location.href='vibe.html'" class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
-                <i class="fas fa-music"></i>
-                <span class="hidden sm:inline">VIBE</span>
+                <i class="fas fa-music"></i><span class="hidden sm:inline">VIBE</span>
             </button>
             <button onclick="window.location.href='hub.html'" class="flex items-center space-x-2 text-red-500 hover:text-red-400 transition-colors">
-                <i class="fas fa-users"></i>
-                <span class="hidden sm:inline">HUB</span>
+                <i class="fas fa-users"></i><span class="hidden sm:inline">HUB</span>
             </button>
         </div>
     </nav>
 
-    <!-- Modals -->
     <div id="event-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center z-50">
-        <div class="bg-secondary-dark rounded-2xl p-8 max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="bg-secondary-dark rounded-2xl p-8 max-w-2xl mx-4 max-h-[90vh] overflow-y-auto w-full">
             <div class="flex justify-between items-center mb-6">
                 <h3 id="event-modal-title" class="text-2xl font-bold text-gradient"></h3>
                 <button onclick="closeModal('event-modal')" class="text-gray-400 hover:text-white">
@@ -522,198 +349,231 @@
                     <li>1. Робіть фото під час наших заходів</li>
                     <li>2. Додавайте хештег #LAMBADA.Kosice</li>
                     <li>3. Тегайте @lambada_kosice</li>
-                    <li>4. Діліться враженнями в підписі</li>
-                    <li>5. Слідкуйте за нашими сторіс та постами</li>
                 </ol>
                 <div class="bg-red-600 bg-opacity-20 p-4 rounded-lg">
-                    <p class="text-sm"><strong class="text-red-400">Порада:</strong> Найкращі фото з'являться на нашій Стіні Дружби та в Instagram!</p>
+                    <p class="text-sm"><strong class="text-red-400">Порада:</strong> Найкращі фото з'являться в Instagram!</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // vanta.js
-            // VANTA.NET({     
-            // el: "#vanta-bg",
-            // mouseControls: true,
-            // touchControls: true,
-            // gyroControls: false,
-            // minHeight: 200.00,
-            // minWidth: 200.00,
-            // scale: 1.00,
-            // scaleMobile: 1.00
-            // })
-            VANTA.NET({
-            el: "#vanta-bg",
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            scale: 1.00,
-            scaleMobile: 1.00,
-            //color: 0x1a1a1a,
-            shininess: 30.00,
-            waveHeight: 15.00,
-            waveSpeed: 0.75,
-            zoom: 0.65
-        });
-
-        // Language switch functionality
-        document.getElementById('lang-ua').addEventListener('click', function() {
-            this.classList.add('bg-red-600');
-            this.classList.remove('bg-gray-700');
-            document.getElementById('lang-sk').classList.add('bg-gray-700');
-            document.getElementById('lang-sk').classList.remove('bg-red-600');
-        });
-
-        document.getElementById('lang-sk').addEventListener('click', function() {
-            this.classList.add('bg-red-600');
-            this.classList.remove('bg-gray-700');
-            document.getElementById('lang-ua').classList.add('bg-gray-700');
-            document.getElementById('lang-ua').classList.remove('bg-red-600');
-        });
-
-        // Calendar functionality
-        let currentMonth = 10; // November (0-indexed)
-        let currentYear = 2025;
-
-        function previousMonth() {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
+        // 1. CONFIG & DATA
+        const eventsData = [
+            {
+                id: 'monday-club',
+                title: 'Мовний Клуб',
+                date: '2025-11-18',
+                time: '18:00',
+                desc: 'Практика української мови для всіх рівнів. Ігри, розмови.',
+                fullDesc: 'Практика української мови для всіх рівнів знань. Інтерактивні ігри, розмовні практики та нові знайомства.',
+                lang: 'Українська',
+                langClass: 'lang-ua',
+                participants: 15,
+                location: 'Коворкінг зона',
+                features: ['Інтерактивні ігри', 'Розмовні практики', 'Нові знайомства']
+            },
+            {
+                id: 'game-night',
+                title: 'Game Night',
+                date: '2025-11-20',
+                time: '19:00',
+                desc: 'Турнір з настільних ігор. Каркассон, Монополія, Уно.',
+                fullDesc: 'Турнір з настільних ігор для справжніх геймерів. Призи, коктейлі та слава переможцям!',
+                lang: 'Slovenský',
+                langClass: 'lang-sk',
+                participants: 20,
+                location: 'Ігрова зона',
+                features: ['Каркассон', 'Монополія', 'Уно', 'Призи']
+            },
+            {
+                id: 'vibe-night',
+                title: 'VIBE Night',
+                date: '2025-11-25',
+                time: '20:00',
+                desc: 'Вечір атмосферної музики в стилі The Weeknd.',
+                fullDesc: 'Вечір атмосферної музики, коктейлів та вільного спілкування в стилі The Weeknd.',
+                lang: 'UA/SK',
+                langClass: 'lang-both',
+                participants: 30,
+                location: 'Лаунж зона',
+                features: ['Музика', 'Коктейлі', 'Lounge']
             }
-            updateCalendar();
+        ];
+
+        let currentDate = new Date(2025, 10); // Листопад 2025
+
+        // 2. INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            // Init Vanta
+            try {
+                VANTA.NET({
+                    el: "#vanta-bg",
+                    mouseControls: true,
+                    touchControls: true,
+                    gyroControls: false,
+                    minHeight: 200.00,
+                    minWidth: 200.00,
+                    scale: 1.00,
+                    scaleMobile: 1.00,
+                    shininess: 30.00,
+                    waveHeight: 15.00,
+                    waveSpeed: 0.75,
+                    zoom: 0.65
+                });
+            } catch (e) { console.log("Vanta failed to load", e); }
+
+            renderCalendar();
+            renderEventCards();
+        });
+
+        // 3. CALENDAR LOGIC
+        function changeMonth(step) {
+            currentDate.setMonth(currentDate.getMonth() + step);
+            renderCalendar();
         }
 
-        function nextMonth() {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            const monthDisplay = document.getElementById('current-month-display');
+            
+            // Headers
+            const days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
+            grid.innerHTML = days.map(day => `<div class="calendar-day calendar-header">${day}</div>`).join('');
+
+            // Month Title
+            const monthName = currentDate.toLocaleString('uk-UA', { month: 'long', year: 'numeric' });
+            monthDisplay.textContent = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+
+            // Logic
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const firstDayOfMonth = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const adjustedFirstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+
+            // Empty slots
+            for (let i = 0; i < adjustedFirstDay; i++) {
+                grid.innerHTML += `<div class="calendar-day empty opacity-0 pointer-events-none"></div>`;
             }
-            updateCalendar();
-        }
 
-        function updateCalendar() {
-            const monthNames = [
-                'Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
-                'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'
-            ];
-            document.getElementById('current-month').textContent = `${monthNames[currentMonth]} ${currentYear}`;
-        }
-
-        // Event details modal
-        function showEventDetails(eventId) {
-            const events = {
-                'monday-club': {
-                    title: 'Мовний Клуб',
-                    content: `
-                        <div class="space-y-4">
-                            <div class="bg-red-600 bg-opacity-20 p-4 rounded-lg">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="event-language lang-ua">Українська</span>
-                                    <span class="text-sm text-muted">18 листопада, 18:00</span>
-                                </div>
-                                <p class="text-sm">Практика української мови для всіх рівнів знань</p>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <h4 class="font-bold mb-2">Що чекає:</h4>
-                                    <ul class="text-sm text-muted space-y-1">
-                                        <li>• Інтерактивні ігри</li>
-                                        <li>• Розмовні практики</li>
-                                        <li>• Нові знайомства</li>
-                                        <li>• Культурний обмін</li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold mb-2">Для кого:</h4>
-                                    <ul class="text-sm text-muted space-y-1">
-                                        <li>• Початківців</li>
-                                        <li>• Середній рівень</li>
-                                        <li>• Просунуті</li>
-                                        <li>• Носії мови</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="bg-gray-800 p-4 rounded-lg">
-                                <p class="text-sm text-muted">Місце: Коворкінг зона ЛАМБАДИ</p>
-                                <p class="text-sm text-muted">Вхід: Вільний для учасників спільноти</p>
-                            </div>
-                        </div>
-                    `
-                },
-                'game-night': {
-                    title: 'Game Night',
-                    content: `
-                        <div class="space-y-4">
-                            <div class="bg-red-600 bg-opacity-20 p-4 rounded-lg">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="event-language lang-sk">Slovenský</span>
-                                    <span class="text-sm text-muted">20 листопада, 19:00</span>
-                                </div>
-                                <p class="text-sm">Турнір з настільних ігор для справжніх геймерів</p>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <h4 class="font-bold mb-2">Ігри:</h4>
-                                    <ul class="text-sm text-muted space-y-1">
-                                        <li>• Каркассон</li>
-                                        <li>• Монополія</li>
-                                        <li>• Уно</li>
-                                        <li>• Шахи</li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold mb-2">Призи:</h4>
-                                    <ul class="text-sm text-muted space-y-1">
-                                        <li>• Сертифікати</li>
-                                        <li>• Коктейлі</li>
-                                        <li>• Сувеніри</li>
-                                        <li>• Слава</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="bg-gray-800 p-4 rounded-lg">
-                                <p class="text-sm text-muted">Місце: Ігрова зона ЛАМБАДИ</p>
-                                <p class="text-sm text-muted">Реєстрація: Обов'язкова (максимум 20 учасників)</p>
-                            </div>
-                        </div>
-                    `
+            // Days
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const event = eventsData.find(e => e.date === dateString);
+                
+                let className = 'calendar-day';
+                let onClick = '';
+                
+                if (event) {
+                    className += ' has-event';
+                    onClick = `onclick="showEventDetails('${event.id}')"`;
                 }
-            };
-
-            const event = events[eventId];
-            if (event) {
-                document.getElementById('event-modal-title').textContent = event.title;
-                document.getElementById('event-modal-content').innerHTML = event.content;
-                document.getElementById('event-modal').classList.remove('hidden');
-                document.getElementById('event-modal').classList.add('flex');
+                
+                grid.innerHTML += `<div class="${className}" ${onClick}>${day}</div>`;
             }
         }
 
-        // Join event function
+        // 4. CARDS LOGIC
+        function renderEventCards() {
+            const container = document.getElementById('events-container');
+            container.innerHTML = '';
+            
+            const sortedEvents = [...eventsData].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            sortedEvents.forEach(event => {
+                const dateObj = new Date(event.date);
+                const dateStr = dateObj.toLocaleString('uk-UA', { day: 'numeric', month: 'long' });
+                
+                container.innerHTML += `
+                    <div class="event-card rounded-2xl p-6 hover-lift">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="event-language ${event.langClass}">${event.lang}</span>
+                            <span class="text-sm text-muted">${dateStr}, ${event.time}</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">${event.title}</h3>
+                        <p class="text-muted mb-4">${event.desc}</p>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <div class="flex items-center text-sm text-muted">
+                                <i class="fas fa-users mr-2"></i><span>${event.participants} учасників</span>
+                            </div>
+                            <div class="flex items-center text-sm text-muted">
+                                <i class="fas fa-map-marker-alt mr-2"></i><span>${event.location}</span>
+                            </div>
+                        </div>
+                        <button onclick="joinEvent('${event.id}')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                            Приєднатися
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        // 5. MODAL LOGIC
+        function showEventDetails(eventId) {
+            const event = eventsData.find(e => e.id === eventId);
+            if (!event) return;
+
+            const dateObj = new Date(event.date);
+            const dateStr = dateObj.toLocaleString('uk-UA', { day: 'numeric', month: 'long' });
+            
+            // Generate feature list HTML
+            const featuresHTML = event.features.map(f => `<li>• ${f}</li>`).join('');
+
+            const content = `
+                <div class="space-y-4">
+                    <div class="bg-red-600 bg-opacity-20 p-4 rounded-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="event-language ${event.langClass}">${event.lang}</span>
+                            <span class="text-sm text-muted">${dateStr}, ${event.time}</span>
+                        </div>
+                        <p class="text-sm">${event.fullDesc}</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-bold mb-2">Деталі:</h4>
+                            <ul class="text-sm text-muted space-y-1">
+                                ${featuresHTML}
+                            </ul>
+                        </div>
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <p class="text-sm text-muted mb-2"><i class="fas fa-map-marker-alt mr-2"></i> ${event.location}</p>
+                            <p class="text-sm text-muted"><i class="fas fa-users mr-2"></i> ${event.participants} місць</p>
+                        </div>
+                    </div>
+                    <button onclick="joinEvent('${event.id}')" class="w-full mt-4 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-bold transition-colors">
+                        Зареєструватися на подію
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('event-modal-title').textContent = event.title;
+            document.getElementById('event-modal-content').innerHTML = content;
+            
+            const modal = document.getElementById('event-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
         function joinEvent(eventId) {
-            alert('Реєстрацію завершено! Чекаємо вас на заході. Деталі надіслано на email.');
+            const event = eventsData.find(e => e.id === eventId);
+            alert(`Ви успішно зареєструвалися на "${event.title}"! Чекаємо вас.`);
+            closeModal('event-modal');
         }
 
-        // Show upload instructions
         function showUploadInstructions() {
-            document.getElementById('instructions-modal').classList.remove('hidden');
-            document.getElementById('instructions-modal').classList.add('flex');
+            const modal = document.getElementById('instructions-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
-        // Close modal function
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
 
-        // Close modals when clicking outside
+        // Close on click outside
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('fixed')) {
                 e.target.classList.add('hidden');
@@ -721,12 +581,14 @@
             }
         });
 
-        // Friendship wall interaction
-        document.querySelectorAll('.friendship-card').forEach(card => {
-            card.addEventListener('click', function() {
-                // In a real implementation, this would show user profile
-                window.open('https://instagram.com/lambada.kosice', '_blank');
-            });
+        // Language switch visual only
+        document.getElementById('lang-ua').addEventListener('click', function() {
+            this.classList.add('bg-red-600'); this.classList.remove('bg-gray-700');
+            document.getElementById('lang-sk').classList.add('bg-gray-700'); document.getElementById('lang-sk').classList.remove('bg-red-600');
+        });
+        document.getElementById('lang-sk').addEventListener('click', function() {
+            this.classList.add('bg-red-600'); this.classList.remove('bg-gray-700');
+            document.getElementById('lang-ua').classList.add('bg-gray-700'); document.getElementById('lang-ua').classList.remove('bg-red-600');
         });
     </script>
 </body>
