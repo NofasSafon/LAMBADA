@@ -57,18 +57,6 @@
             box-shadow: 0 15px 30px rgba(220, 38, 38, 0.2);
         }
         
-        .playlist-card {
-            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(10, 10, 10, 0.9));
-            border: 1px solid rgba(220, 38, 38, 0.2);
-            transition: all 0.4s ease;
-        }
-        
-        .playlist-card:hover {
-            border-color: var(--accent-red);
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(220, 38, 38, 0.3);
-        }
-        
         .style-card {
             background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(10, 10, 10, 0.9));
             border: 1px solid rgba(220, 38, 38, 0.2);
@@ -122,53 +110,49 @@
             border: 1px solid rgba(220, 38, 38, 0.3);
         }
         
-        .progress-bar {
+        .progress-container {
             background: rgba(220, 38, 38, 0.3);
             height: 4px;
             border-radius: 2px;
             overflow: hidden;
+            cursor: pointer;
         }
         
         .progress-fill {
             background: var(--accent-red);
             height: 100%;
-            width: 35%;
-            transition: width 0.3s ease;
+            width: 0%;
+            transition: width 0.1s linear;
         }
         
         .spotify-embed {
             border-radius: 12px;
             background: rgba(26, 26, 26, 0.9);
+            overflow: hidden;
         }
         
+        /* Анімація обертання для платівки/іконки при грі */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .playing-animation {
+            animation: spin 4s linear infinite;
+        }
+
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            
-            .nav-bottom {
-                bottom: 1rem;
-            }
-            
-            .language-switch {
-                top: 1rem;
-                right: 1rem;
-            }
+            .hero-title { font-size: 2.5rem; }
+            .nav-bottom { bottom: 1rem; }
+            .language-switch { top: 1rem; right: 1rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Language Switch -->
     <div class="language-switch">
-        <button id="lang-ua" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-            UA
-        </button>
-        <button id="lang-sk" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-red-700 transition-colors ml-2">
-            SK
-        </button>
+        <button id="lang-ua" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">UA</button>
+        <button id="lang-sk" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-red-700 transition-colors ml-2">SK</button>
     </div>
 
-    <!-- Hero Section -->
     <section class="relative min-h-[60vh] flex items-center justify-center px-4 overflow-hidden">
         <div id="vanta-bg" class="vanta-canvas"></div>
         
@@ -180,144 +164,91 @@
         </div>
     </section>
 
-    <!-- Music Player Section -->
     <section class="py-20 px-4">
         <div class="max-w-7xl mx-auto">
             <h2 class="section-title text-center mb-16 text-gradient">ЛАМБАДА Playlist</h2>
             
-            <!-- Music Player Interface -->
             <div class="music-player rounded-2xl p-8 mb-12 max-w-4xl mx-auto">
                 <div class="flex items-center space-x-6 mb-6">
-                    <div class="w-24 h-24 bg-gradient-to-br from-red-600 to-purple-600 rounded-lg flex items-center justify-center">
+                    <div id="album-art" class="w-24 h-24 bg-gradient-to-br from-red-600 to-purple-600 rounded-lg flex items-center justify-center transition-all">
                         <i class="fas fa-music text-4xl text-white"></i>
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-2xl font-bold mb-2">Blinding Lights</h3>
-                        <p class="text-muted mb-4">The Weeknd • After Hours</p>
+                        <h3 id="track-title" class="text-2xl font-bold mb-2">Select a Track</h3>
+                        <p id="track-artist" class="text-muted mb-4">LOMBADA • Vibe</p>
                         
-                        <div class="progress-bar mb-2">
-                            <div class="progress-fill"></div>
+                        <div class="progress-container mb-2" id="progress-container">
+                            <div class="progress-fill" id="progress-fill"></div>
                         </div>
                         <div class="flex justify-between text-sm text-muted">
-                            <span>1:23</span>
-                            <span>3:20</span>
+                            <span id="current-time">0:00</span>
+                            <span id="duration">0:00</span>
                         </div>
                     </div>
                 </div>
                 
                 <div class="flex items-center justify-center space-x-6">
-                    <button class="text-gray-400 hover:text-white transition-colors">
+                    <button id="prev-btn" class="text-gray-400 hover:text-white transition-colors">
                         <i class="fas fa-step-backward text-2xl"></i>
                     </button>
-                    <button class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors">
-                        <i class="fas fa-play text-2xl text-white"></i>
+                    <button id="play-btn" class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors hover-lift shadow-lg shadow-red-900/50">
+                        <i class="fas fa-play text-2xl text-white pl-1"></i>
                     </button>
-                    <button class="text-gray-400 hover:text-white transition-colors">
+                    <button id="next-btn" class="text-gray-400 hover:text-white transition-colors">
                         <i class="fas fa-step-forward text-2xl"></i>
                     </button>
                 </div>
             </div>
             
-            <!-- Spotify Embed -->
             <div class="text-center">
-                <div class="spotify-embed p-8 rounded-2xl max-w-2xl mx-auto">
-                    <h3 class="text-xl font-bold mb-4">Слухайте наш плейлист</h3>
-                    <div class="bg-gray-800 rounded-lg p-6 mb-4">
-                        <div class="flex items-center space-x-4 mb-4">
-                            <div class="w-16 h-16 bg-red-600 rounded flex items-center justify-center">
-                                <i class="fab fa-spotify text-2xl text-white"></i>
-                            </div>
-                            <div class="text-left">
-                                <h4 class="font-bold">ЛАМБАДА VIBE Playlist</h4>
-                                <p class="text-sm text-muted">The Weeknd, сучасні хіти, атмосферна музика</p>
-                            </div>
-                        </div>
-                        <button onclick="openSpotifyPlaylist()" class="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                            Відкрити в Spotify
-                        </button>
+                <div class="spotify-embed p-4 rounded-2xl max-w-2xl mx-auto border border-red-900/30">
+                    <h3 class="text-xl font-bold mb-4 text-white">Слухати повний плейлист на Spotify</h3>
+                    
+                    <div class="w-full rounded-xl overflow-hidden shadow-2xl">
+                        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX6bnzK9KPvrz?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                     </div>
-                    <p class="text-sm text-muted">Регулярно оновлюємо плейлист новими треками</p>
+                    
+                    <p class="text-sm text-muted mt-4">Тут зібрані найкращі треки The Weeknd та атмосферна музика для вечірок.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Style Kosice Section -->
     <section class="py-20 px-4 bg-secondary-dark">
         <div class="max-w-7xl mx-auto">
             <h2 class="section-title text-center mb-16 text-gradient">Стиль Кошице</h2>
             
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Style Card 1 -->
                 <div class="style-card rounded-2xl p-6 hover-lift">
                     <div class="aspect-square bg-gray-800 rounded-lg mb-4 overflow-hidden">
                         <img src="img/styl_2.jpg" alt="Nightlife Style" class="w-full h-full object-cover">
                     </div>
                     <h3 class="text-xl font-bold mb-2">Мінімалістичний Шик</h3>
                     <p class="text-muted mb-4">Чисті лінії, монохромні кольори та стримана елегантність у стилі The Weeknd.</p>
-                    <div class="space-y-2 mb-4">
-                        <div class="flex items-center text-sm">
-                            <i class="fas fa-palette text-red-500 mr-2"></i>
-                            <span>Чорний, білий, червоні акценти</span>
-                        </div>
-                        <div class="flex items-center text-sm">
-                            <i class="fas fa-tshirt text-red-500 mr-2"></i>
-                            <span>Мінімалістичні принти</span>
-                        </div>
-                    </div>
-                    <button onclick="showStyleDetails('minimalist-chic')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                        Детальніше
-                    </button>
+                    <button onclick="showStyleDetails('minimalist-chic')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">Детальніше</button>
                 </div>
 
-                <!-- Style Card 2 -->
                 <div class="style-card rounded-2xl p-6 hover-lift">
                     <div class="aspect-square bg-gray-800 rounded-lg mb-4 overflow-hidden">
                         <img src="img/KOSH_1.jpg" alt="Urban Style" class="w-full h-full object-cover">
                     </div>
                     <h3 class="text-xl font-bold mb-2">Урбаністичний Стиль</h3>
                     <p class="text-muted mb-4">Сучасний міський стиль з елементами вуличної культури та нічного життя.</p>
-                    <div class="space-y-2 mb-4">
-                        <div class="flex items-center text-sm">
-                            <i class="fas fa-building text-red-500 mr-2"></i>
-                            <span>Міські мотиви</span>
-                        </div>
-                        <div class="flex items-center text-sm">
-                            <i class="fas fa-star text-red-500 mr-2"></i>
-                            <span>Нeon акценти</span>
-                        </div>
-                    </div>
-                    <button onclick="showStyleDetails('urban-style')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                        Детальніше
-                    </button>
+                    <button onclick="showStyleDetails('urban-style')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">Детальніше</button>
                 </div>
 
-                <!-- Style Card 3 -->
                 <div class="style-card rounded-2xl p-6 hover-lift">
                     <div class="aspect-square bg-gray-800 rounded-lg mb-4 overflow-hidden">
                         <img src="img/styl_4.jpg" alt="Night Aesthetic" class="w-full h-full object-cover">
                     </div>
                     <h3 class="text-xl font-bold mb-2">Нічна Естетика</h3>
                     <p class="text-muted mb-4">Атмосфера нічного Кошице з м'яким світлом та інтимною обстановкою.</p>
-                    <div class="space-y-2 mb-4">
-                        <div class="flex items-center text-sm">
-                            <i class="fas fa-moon text-red-500 mr-2"></i>
-                            <span>Темна палітра</span>
-                        </div>
-                        <div class="flex items-center text-sm">
-                            <i class="fas fa-lightbulb text-red-500 mr-2"></i>
-                            <span>М'яке освітлення</span>
-                        </div>
-                    </div>
-                    <button onclick="showStyleDetails('night-aesthetic')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                        Детальніше
-                    </button>
+                    <button onclick="showStyleDetails('night-aesthetic')" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">Детальніше</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- The Weeknd Aesthetic Section -->
     <section class="py-20 px-4">
         <div class="max-w-7xl mx-auto">
             <h2 class="section-title text-center mb-16 text-gradient">The Weeknd Aesthetic</h2>
@@ -333,106 +264,56 @@
                     
                     <div class="space-y-6">
                         <div class="flex items-start space-x-4">
-                            <div class="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-palette text-white"></i>
-                            </div>
+                            <div class="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fas fa-palette text-white"></i></div>
                             <div>
                                 <h4 class="font-bold mb-2">Кольорова Палітра</h4>
                                 <p class="text-muted">Чорний, темно-сірий, білий з червоними акцентами</p>
                             </div>
                         </div>
-                        
                         <div class="flex items-start space-x-4">
-                            <div class="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-lightbulb text-white"></i>
-                            </div>
+                            <div class="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fas fa-lightbulb text-white"></i></div>
                             <div>
                                 <h4 class="font-bold mb-2">Освітлення</h4>
                                 <p class="text-muted">М'яке, приглушене світло з neon акцентами</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start space-x-4">
-                            <div class="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-music text-white"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold mb-2">Музика</h4>
-                                <p class="text-muted">Синтезаторні саундтреки, R&B, атмосферна музика</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="relative">
-                    <div class="aspect-square bg-gradient-to-br from-red-600 to-purple-600 rounded-2xl flex items-center justify-center">
+                    <div class="aspect-square bg-gradient-to-br from-red-600 to-purple-600 rounded-2xl flex items-center justify-center hover-lift">
                         <div class="text-center">
                             <i class="fas fa-music text-8xl text-white mb-4"></i>
                             <h3 class="text-2xl font-bold text-white">After Hours</h3>
                             <p class="text-white text-opacity-80">The Weeknd</p>
                         </div>
                     </div>
-                    <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-red-600 rounded-full opacity-20"></div>
-                    <div class="absolute -top-4 -left-4 w-24 h-24 bg-purple-600 rounded-full opacity-20"></div>
+                    <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-red-600 rounded-full opacity-20 blur-2xl"></div>
+                    <div class="absolute -top-4 -left-4 w-24 h-24 bg-purple-600 rounded-full opacity-20 blur-2xl"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Instagram Gallery -->
-    <section class="py-20 px-4 bg-secondary-dark">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="section-title text-center mb-16 text-gradient">VIBE Gallery</h2>
-            
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="aspect-square bg-gray-800 rounded-lg overflow-hidden hover-lift cursor-pointer">
-                    <img src="img/IMG_8961.JPG" alt="Vibe 1" class="w-full h-full object-cover">
-                </div>
-                <div class="aspect-square bg-gray-800 rounded-lg overflow-hidden hover-lift cursor-pointer">
-                    <img src="img/hub_1.jpg"Vibe 2" class="w-full h-full object-cover">
-                </div>
-                <div class="aspect-square bg-gray-800 rounded-lg overflow-hidden hover-lift cursor-pointer">
-                    <img src="img/hub_2.jpg" alt="Vibe 3" class="w-full h-full object-cover">
-                </div>
-                <div class="aspect-square bg-gray-800 rounded-lg overflow-hidden hover-lift cursor-pointer">
-                    <img src="img/hub_3.jpg" alt="Vibe 4" class="w-full h-full object-cover">
-                </div>
-            </div>
-            
-            <div class="text-center mt-12">
-                <a href="http://instagram.com/lambada.kosice/" target="_blank" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full hover:from-purple-700 hover:to-pink-700 transition-all hover-lift">
-                    <i class="fab fa-instagram mr-3"></i>
-                    Більше фото в Instagram
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Bottom Navigation -->
     <nav class="nav-bottom glass-effect rounded-full px-6 py-3">
         <div class="flex items-center space-x-6">
             <button onclick="window.location.href='index.html'" class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
-                <i class="fas fa-home"></i>
-                <span class="hidden sm:inline">Головна</span>
+                <i class="fas fa-home"></i><span class="hidden sm:inline">Головна</span>
             </button>
             <button onclick="window.location.href='play.html'" class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
-                <i class="fas fa-gamepad"></i>
-                <span class="hidden sm:inline">PLAY</span>
+                <i class="fas fa-gamepad"></i><span class="hidden sm:inline">PLAY</span>
             </button>
             <button onclick="window.location.href='vibe.html'" class="flex items-center space-x-2 text-red-500 hover:text-red-400 transition-colors">
-                <i class="fas fa-music"></i>
-                <span class="hidden sm:inline">VIBE</span>
+                <i class="fas fa-music"></i><span class="hidden sm:inline">VIBE</span>
             </button>
             <button onclick="window.location.href='hub.html'" class="flex items-center space-x-2 text-gray-400 hover:text-red-400 transition-colors">
-                <i class="fas fa-users"></i>
-                <span class="hidden sm:inline">HUB</span>
+                <i class="fas fa-users"></i><span class="hidden sm:inline">HUB</span>
             </button>
         </div>
     </nav>
 
-    <!-- Modals -->
-    <div id="style-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-secondary-dark rounded-2xl p-8 max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+    <div id="style-modal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-50 backdrop-blur-sm">
+        <div class="bg-secondary-dark rounded-2xl p-8 max-w-2xl mx-4 max-h-[90vh] overflow-y-auto border border-red-900">
             <div class="flex justify-between items-center mb-6">
                 <h3 id="style-modal-title" class="text-2xl font-bold text-gradient"></h3>
                 <button onclick="closeModal('style-modal')" class="text-gray-400 hover:text-white">
@@ -444,148 +325,165 @@
     </div>
 
     <script>
-        // Initialize Vanta.js background
-        VANTA.WAVES({
-            el: "#vanta-bg",
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            scale: 1.00,
-            scaleMobile: 1.00,
-            color: 0x1a1a1a,
-            shininess: 30.00,
-            waveHeight: 15.00,
-            waveSpeed: 0.75,
-            zoom: 0.65
-        });
+        // --- 1. VANTA BACKGROUND ---
+        try {
+            VANTA.WAVES({
+                el: "#vanta-bg",
+                mouseControls: true,
+                touchControls: true,
+                gyroControls: false,
+                minHeight: 200.00,
+                minWidth: 200.00,
+                scale: 1.00,
+                scaleMobile: 1.00,
+                color: 0x1a1a1a,
+                shininess: 30.00,
+                waveHeight: 15.00,
+                waveSpeed: 0.75,
+                zoom: 0.65
+            });
+        } catch (e) { console.log("Vanta script issue"); }
 
-        // Language switch functionality
+        // --- 2. CUSTOM AUDIO PLAYER LOGIC ---
+        // Для кастомного плеєра потрібні прямі посилання на mp3.
+        // Тут використовуються royalty-free семпли для демонстрації.
+        const playlist = [
+            {
+                title: "Blinding Lights (Vibe Cover)",
+                artist: "The Weeknd Style",
+                src: "https://cdn.pixabay.com/download/audio/2022/10/25/audio_13b0952526.mp3?filename=synthwave-cyberpunk-123290.mp3", // Royalty Free Synthwave
+                cover_color: "from-red-600 to-purple-600"
+            },
+            {
+                title: "Midnight City",
+                artist: "Kosice Night",
+                src: "https://cdn.pixabay.com/download/audio/2022/03/24/audio_7159e2b483.mp3?filename=night-city-102843.mp3",
+                cover_color: "from-blue-600 to-indigo-600"
+            },
+            {
+                title: "Deep Lounge",
+                artist: "Chill Zone",
+                src: "https://cdn.pixabay.com/download/audio/2022/05/16/audio_db6591201e.mp3?filename=chill-abstract-12099.mp3",
+                cover_color: "from-purple-600 to-pink-600"
+            }
+        ];
+
+        let currentTrackIndex = 0;
+        const audio = new Audio();
+        let isPlaying = false;
+
+        // DOM Elements
+        const playBtn = document.getElementById('play-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressFill = document.getElementById('progress-fill');
+        const progressContainer = document.getElementById('progress-container');
+        const trackTitle = document.getElementById('track-title');
+        const trackArtist = document.getElementById('track-artist');
+        const currentTimeEl = document.getElementById('current-time');
+        const durationEl = document.getElementById('duration');
+        const albumArt = document.getElementById('album-art');
+
+        // Initialize First Track
+        loadTrack(currentTrackIndex);
+
+        function loadTrack(index) {
+            const track = playlist[index];
+            audio.src = track.src;
+            trackTitle.innerText = track.title;
+            trackArtist.innerText = track.artist;
+            
+            // Update Visuals
+            albumArt.className = `w-24 h-24 bg-gradient-to-br ${track.cover_color} rounded-lg flex items-center justify-center transition-all`;
+        }
+
+        function togglePlay() {
+            const icon = playBtn.querySelector('i');
+            if (isPlaying) {
+                audio.pause();
+                icon.classList.remove('fa-pause');
+                icon.classList.add('fa-play');
+                albumArt.querySelector('i').classList.remove('playing-animation');
+            } else {
+                audio.play();
+                icon.classList.remove('fa-play');
+                icon.classList.add('fa-pause');
+                albumArt.querySelector('i').classList.add('playing-animation');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function prevTrack() {
+            currentTrackIndex--;
+            if (currentTrackIndex < 0) {
+                currentTrackIndex = playlist.length - 1;
+            }
+            loadTrack(currentTrackIndex);
+            if(isPlaying) audio.play();
+        }
+
+        function nextTrack() {
+            currentTrackIndex++;
+            if (currentTrackIndex > playlist.length - 1) {
+                currentTrackIndex = 0;
+            }
+            loadTrack(currentTrackIndex);
+            if(isPlaying) audio.play();
+        }
+
+        function updateProgress(e) {
+            const { duration, currentTime } = e.srcElement;
+            const progressPercent = (currentTime / duration) * 100;
+            progressFill.style.width = `${progressPercent}%`;
+            
+            // Time formatting
+            currentTimeEl.innerText = formatTime(currentTime);
+            if(duration) {
+                durationEl.innerText = formatTime(duration);
+            }
+        }
+
+        function setProgress(e) {
+            const width = this.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            audio.currentTime = (clickX / width) * duration;
+        }
+
+        function formatTime(time) {
+            const minutes = Math.floor(time / 60);
+            let seconds = Math.floor(time % 60);
+            if (seconds < 10) { seconds = `0${seconds}`; }
+            return `${minutes}:${seconds}`;
+        }
+
+        // Event Listeners for Audio
+        playBtn.addEventListener('click', togglePlay);
+        prevBtn.addEventListener('click', prevTrack);
+        nextBtn.addEventListener('click', nextTrack);
+        audio.addEventListener('timeupdate', updateProgress);
+        audio.addEventListener('ended', nextTrack);
+        progressContainer.addEventListener('click', setProgress);
+
+
+        // --- 3. LANGUAGE SWITCH ---
         document.getElementById('lang-ua').addEventListener('click', function() {
-            this.classList.add('bg-red-600');
-            this.classList.remove('bg-gray-700');
-            document.getElementById('lang-sk').classList.add('bg-gray-700');
-            document.getElementById('lang-sk').classList.remove('bg-red-600');
+            this.classList.add('bg-red-600'); this.classList.remove('bg-gray-700');
+            document.getElementById('lang-sk').classList.add('bg-gray-700'); document.getElementById('lang-sk').classList.remove('bg-red-600');
         });
 
         document.getElementById('lang-sk').addEventListener('click', function() {
-            this.classList.add('bg-red-600');
-            this.classList.remove('bg-gray-700');
-            document.getElementById('lang-ua').classList.add('bg-gray-700');
-            document.getElementById('lang-ua').classList.remove('bg-red-600');
+            this.classList.add('bg-red-600'); this.classList.remove('bg-gray-700');
+            document.getElementById('lang-ua').classList.add('bg-gray-700'); document.getElementById('lang-ua').classList.remove('bg-red-600');
         });
 
-        // Music player functionality
-        let isPlaying = false;
-        const playButton = document.querySelector('.fa-play').parentElement;
-        
-        playButton.addEventListener('click', function() {
-            const icon = this.querySelector('i');
-            if (isPlaying) {
-                icon.classList.remove('fa-pause');
-                icon.classList.add('fa-play');
-                isPlaying = false;
-            } else {
-                icon.classList.remove('fa-play');
-                icon.classList.add('fa-pause');
-                isPlaying = true;
-                // Simulate progress
-                simulateProgress();
-            }
-        });
-
-        function simulateProgress() {
-            const progressFill = document.querySelector('.progress-fill');
-            let width = 35;
-            const interval = setInterval(() => {
-                if (width >= 100 || !isPlaying) {
-                    clearInterval(interval);
-                    if (width >= 100) {
-                        playButton.querySelector('i').classList.remove('fa-pause');
-                        playButton.querySelector('i').classList.add('fa-play');
-                        isPlaying = false;
-                        progressFill.style.width = '0%';
-                    }
-                } else {
-                    width += 0.5;
-                    progressFill.style.width = width + '%';
-                }
-            }, 100);
-        }
-
-        // Open Spotify playlist
-        function openSpotifyPlaylist() {
-            // In a real implementation, this would open the actual Spotify playlist
-            alert('Плейлист скоро буде доступний! Слідкуйте за нашими соціальними мережами.');
-        }
-
-        // Style details modal
+        // --- 4. MODALS ---
         function showStyleDetails(styleId) {
             const styles = {
-                'minimalist-chic': {
-                    title: 'Мінімалістичний Шик',
-                    content: `
-                        <div class="space-y-4">
-                            <img src="img/play_3.jpg" alt="Minimalist Chic" class="w-full h-48 object-cover rounded-lg">
-                            <p class="text-muted">Мінімалістичний шик - це стиль, що поєднує простоту з елегантністю. Чисті лінії, монохромні кольори та якісні матеріали.</p>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <h4 class="font-bold mb-2">Кольори:</h4>
-                                    <ul class="text-sm text-muted space-y-1">
-                                        <li>• Чистий білий</li>
-                                        <li>• Глибокий чорний</li>
-                                        <li>• Сірий відтінки</li>
-                                        <li>• Червоні акценти</li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold mb-2">Матеріали:</h4>
-                                    <ul class="text-sm text-muted space-y-1">
-                                        <li>• Натуральний текстиль</li>
-                                        <li>• Металеві деталі</li>
-                                        <li>• Скло</li>
-                                        <li>• Дерево</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="bg-red-600 bg-opacity-20 p-4 rounded-lg">
-                                <p class="text-sm"><strong class="text-red-400">Порада:</strong> Головне правило - менше деталей, більше простору.</p>
-                            </div>
-                        </div>
-                    `
-                },
-                'urban-style': {
-                    title: 'Урбаністичний Стиль',
-                    content: `
-                        <div class="space-y-4">
-                            <img src="img/play_1.jpg" alt="Urban Style" class="w-full h-48 object-cover rounded-lg">
-                            <p class="text-muted">Урбаністичний стиль відображає енергію сучасного міста з елементами вуличної культури та індустріального дизайну.</p>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <h4 class="font-bold mb-2">Елементи:</h4>
-                                    <ul class="text-sm text-muted space-y-1">
-                                        <li>• Графіті мотиви</li>
-                                        <li>• Металеві текстури</li>
-                                        <li>• Neon підсвітка</li>
-                                        <li>• Вуличне мистецтво</li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold mb-2">Атмосфера:</h4>
-                                    <ul class="text-sm text-muted space-y-1">
-                                        <li>• Динамічна енергія</li>
-                                        <li>• Сучасність</li>
-                                        <li>• Креативність</li>
-                                        <li>• Вільний дух</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    `
-                }
+                'minimalist-chic': { title: 'Мінімалістичний Шик', content: `<p class="text-muted">Простота, елегантність, чорно-біла палітра.</p>` },
+                'urban-style': { title: 'Урбаністичний Стиль', content: `<p class="text-muted">Місто, бетон, неон, енергія.</p>` },
+                'night-aesthetic': { title: 'Нічна Естетика', content: `<p class="text-muted">Темрява, тіні, загадковість.</p>` }
             };
-
             const style = styles[styleId];
             if (style) {
                 document.getElementById('style-modal-title').textContent = style.title;
@@ -595,27 +493,17 @@
             }
         }
 
-        // Close modal function
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
 
-        // Close modals when clicking outside
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('fixed')) {
                 e.target.classList.add('hidden');
                 e.target.classList.remove('flex');
             }
-        });
-
-        // Gallery interaction
-        document.querySelectorAll('.style-card img').forEach(img => {
-            img.addEventListener('click', function() {
-                // In a real implementation, this would open a lightbox
-                window.open('https://instagram.com/LAMBADA.kosice', '_blank');
-            });
         });
     </script>
 </body>
